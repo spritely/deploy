@@ -1,6 +1,6 @@
 services:
-  build-dev:
-    container_name: build-dev
+  deploy-dev:
+    container_name: deploy-dev
     image: docker.io/spritelydev/dotnet8-devcontainer:0.3.5
     command: /bin/sh -c "sleep infinity"
     volumes:
@@ -11,4 +11,3 @@ services:
     # Environment variables have higher precedence than the .env file
     environment:
       - NUGET_TOKEN=${NUGET_TOKEN}
-    network_mode: "host"

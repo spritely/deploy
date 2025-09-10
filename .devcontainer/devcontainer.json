@@ -1,10 +1,10 @@
 // For format details, see https://aka.ms/devcontainer.json. For config options, see the
 // README at: https://github.com/devcontainers/templates/tree/main/src/dotnet
 {
-    "name": "build",
+    "name": "deploy",
 
     "dockerComposeFile": "docker-compose.yaml",
-    "service": "build-dev",
+    "service": "deploy-dev",
     "workspaceFolder": "/src",
     "initializeCommand": "(mkdir .devcontainer 2>/dev/null; touch .devcontainer/.env 2>/dev/null) || (mkdir .devcontainer 2> nul & type nul >> .devcontainer/.env 2> nul)",
 
