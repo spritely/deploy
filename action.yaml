@@ -356,3 +356,4 @@ runs:
         AZURE_CLIENT_SECRET: ${{ steps.configure.outputs.azureClientSecret }}
         KUBECONFIG: ${{ github.workspace }}/config/kubeConfig
         NUGET_TOKEN: ${{ inputs.nugetAuthToken }}
+        PULUMI_BACKEND_URL: ${{ steps.configure.outputs.cloudUrl }}
