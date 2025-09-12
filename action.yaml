@@ -328,17 +328,6 @@ runs:
         echo "::add-mask::$configMap"
         echo "configMap=$configMap" >> $GITHUB_OUTPUT
 
-    - name: Azure Login
-      uses: azure/login@v2
-      with:
-        creds: |
-          {
-            "clientId": "${{ steps.configure.outputs.azureClientId }}",
-            "clientSecret": "${{ steps.configure.outputs.azureClientSecret }}",
-            "subscriptionId": "${{ steps.configure.outputs.azureSubscriptionId }}",
-            "tenantId": "${{ steps.configure.outputs.azureTenantId }}"
-          }
-
     # To fix a bug in the pulumi github action where it doesn't respect secrets provider setting made during deploy on a redeployment
     - name: Ensure Stack Configuration
       shell: bash
@@ -349,7 +338,7 @@ runs:
         EOF
 
     - name: Deploy
-      uses: pulumi/actions@v5.5.1
+      uses: pulumi/actions@v6
       with:
         command: ${{ inputs.command }}
         stack-name: organization/${{ inputs.projectName }}/${{ steps.configure.outputs.environment }}
@@ -376,4 +365,3 @@ runs:
         AZURE_CLIENT_SECRET: ${{ steps.configure.outputs.azureClientSecret }}
         KUBECONFIG: ${{ github.workspace }}/config/kubeConfig
         NUGET_TOKEN: ${{ inputs.nugetAuthToken }}
-        PULUMI_BACKEND_URL: ${{ steps.configure.outputs.cloudUrl }}
