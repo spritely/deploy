@@ -340,7 +340,7 @@ runs:
           }
 
     - name: Deploy
-      uses: pulumi/actions@v6
+      uses: pulumi/actions@v5.5.1
       with:
         command: ${{ inputs.command }}
         stack-name: organization/${{ inputs.projectName }}/${{ steps.configure.outputs.environment }}
@@ -367,3 +367,4 @@ runs:
         AZURE_CLIENT_SECRET: ${{ steps.configure.outputs.azureClientSecret }}
         KUBECONFIG: ${{ github.workspace }}/config/kubeConfig
         NUGET_TOKEN: ${{ inputs.nugetAuthToken }}
+        PULUMI_BACKEND_URL: ${{ steps.configure.outputs.cloudUrl }}
