@@ -358,5 +358,12 @@ runs:
       env:
         AZURE_STORAGE_ACCOUNT: ${{ steps.configure.outputs.azureStorageAccount }}
         AZURE_STORAGE_KEY: ${{ steps.configure.outputs.azureStorageAccountKey }}
+        ARM_SUBSCRIPTION_ID: ${{ steps.configure.outputs.azureSubscriptionId }}
+        ARM_TENANT_ID: ${{ steps.configure.outputs.azureTenantId }}
+        ARM_CLIENT_ID: ${{ steps.configure.outputs.azureClientId }}
+        ARM_CLIENT_SECRET: ${{ steps.configure.outputs.azureClientSecret }}
+        AZURE_TENANT_ID: ${{ steps.configure.outputs.azureTenantId }}
+        AZURE_CLIENT_ID: ${{ steps.configure.outputs.azureClientId }}
+        AZURE_CLIENT_SECRET: ${{ steps.configure.outputs.azureClientSecret }}
         KUBECONFIG: ${{ github.workspace }}/config/kubeConfig
         NUGET_TOKEN: ${{ inputs.nugetAuthToken }}
