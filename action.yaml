@@ -339,6 +339,15 @@ runs:
             "tenantId": "${{ steps.configure.outputs.azureTenantId }}"
           }
 
+    # To fix a bug in the pulumi github action where it doesn't respect secrets provider setting made during deploy on a redeployment
+    - name: Ensure Stack Configuration
+      shell: bash
+      working-directory: ${{ inputs.projectFolder }}
+      run: |
+        cat > "Pulumi.${{ steps.configure.outputs.environment }}.yaml" <<EOF
+        secretsprovider: ${{ steps.configure.outputs.secretsProvider }}
+        EOF
+
     - name: Deploy
       uses: pulumi/actions@v5.5.1
       with:
