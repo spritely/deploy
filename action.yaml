@@ -53,7 +53,7 @@ inputs:
     description: The version of pulumi to use.
     required: false
     # To find a new version check this page: https://www.pulumi.com/docs/install/versions/
-    default: 3.195.0
+    default: 3.211.0
 
 runs:
   using: composite
