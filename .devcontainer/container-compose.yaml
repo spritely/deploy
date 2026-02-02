@@ -1,7 +1,7 @@
 services:
   deploy-dev:
     container_name: deploy-dev
-    image: docker.io/spritelydev/dotnet10-devcontainer:0.1.1
+    image: docker.io/spritelydev/dotnet10-devcontainer:0.1.2
     privileged: true
     command: /bin/sh -c "sleep infinity"
     volumes:
