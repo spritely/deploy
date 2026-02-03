@@ -53,20 +53,20 @@ inputs:
     description: The version of pulumi to use.
     required: false
     # To find a new version check this page: https://www.pulumi.com/docs/install/versions/
-    default: 3.211.0
+    default: 3.218.0
 
 runs:
   using: composite
   steps:
     - id: version
       name: Get semantic version
-      uses: spritely/actions.semantic-version/get@v0.5.6
+      uses: spritely/actions.semantic-version/get@9030147256b1893f621a45535878d4050b9ad168
       with:
         workingDirectory: ${{ inputs.workingDirectory }}
 
     - id: setup-dotnet
       name: Setup dotnet
-      uses: actions/setup-dotnet@v5
+      uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
 
     - id: stack
       name: Select stack
@@ -96,7 +96,7 @@ runs:
         echo bootstrapStackName=$bootstrapStackName >> $GITHUB_OUTPUT
 
     - name: Prepare deployment config
-      uses: DamianReeves/write-file-action@v1.3
+      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42
       with:
         path: ${{ github.workspace }}/config/deployment.json
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
@@ -104,7 +104,7 @@ runs:
 
     - name: Prepare kubeconfig
       if: ${{ inputs.prodKubeConfig && inputs.devKubeConfig }}
-      uses: DamianReeves/write-file-action@v1.3
+      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42
       with:
         path: ${{ github.workspace }}/config/kubeConfig
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
@@ -338,7 +338,7 @@ runs:
         EOF
 
     - name: Deploy
-      uses: pulumi/actions@v6
+      uses: pulumi/actions@8582a9e8cc630786854029b4e09281acd6794b58
       with:
         command: ${{ inputs.command }}
         stack-name: organization/${{ inputs.projectName }}/${{ steps.configure.outputs.environment }}
