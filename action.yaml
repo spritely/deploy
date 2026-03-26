@@ -60,13 +60,13 @@ runs:
   steps:
     - id: version
       name: Get semantic version
-      uses: spritely/actions.semantic-version/get@9030147256b1893f621a45535878d4050b9ad168
+      uses: spritely/actions.semantic-version/get@1e6b5225390b9b635e3cb83245cd94db82d0ac34
       with:
         workingDirectory: ${{ inputs.workingDirectory }}
 
     - id: setup-dotnet
       name: Setup dotnet
-      uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7
 
     - id: stack
       name: Select stack
