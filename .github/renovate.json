@@ -10,7 +10,7 @@
     {
       "customType": "regex",
       "managerFilePatterns": [
-        "/action\.yaml$/"
+        "/action\\.yaml$/"
       ],
       "matchStrings": [
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?) extractVersion=(?<extractVersion>.*?)\\n\\s*default: (?<currentValue>\\S+)"
