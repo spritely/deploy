@@ -52,7 +52,7 @@ inputs:
   pulumiVersion:
     description: The version of pulumi to use.
     required: false
-    # To find a new version check this page: https://www.pulumi.com/docs/install/versions/
+    # renovate: datasource=github-releases depName=pulumi/pulumi extractVersion=^v(?<version>.*)$
     default: 3.218.0
 
 runs:
