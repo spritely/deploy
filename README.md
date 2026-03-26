@@ -1,3 +1,3 @@
 # deploy
 
-GitHub actions workflows for deployment
+GitHub actions workflows for Pulumi based deployments
