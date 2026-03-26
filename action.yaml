@@ -60,13 +60,13 @@ runs:
   steps:
     - id: version
       name: Get semantic version
-      uses: spritely/actions.semantic-version/get@9030147256b1893f621a45535878d4050b9ad168
+      uses: spritely/actions.semantic-version/get@9030147256b1893f621a45535878d4050b9ad168 # v0.5.7
       with:
         workingDirectory: ${{ inputs.workingDirectory }}
 
     - id: setup-dotnet
       name: Setup dotnet
-      uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309
+      uses: actions/setup-dotnet@baa11fbfe1d6520db94683bd5c7a3818018e4309 # v5.1.0
 
     - id: stack
       name: Select stack
@@ -96,7 +96,7 @@ runs:
         echo bootstrapStackName=$bootstrapStackName >> $GITHUB_OUTPUT
 
     - name: Prepare deployment config
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42
+      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
       with:
         path: ${{ github.workspace }}/config/deployment.json
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
@@ -104,7 +104,7 @@ runs:
 
     - name: Prepare kubeconfig
       if: ${{ inputs.prodKubeConfig && inputs.devKubeConfig }}
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42
+      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
       with:
         path: ${{ github.workspace }}/config/kubeConfig
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
@@ -338,7 +338,7 @@ runs:
         EOF
 
     - name: Deploy
-      uses: pulumi/actions@8582a9e8cc630786854029b4e09281acd6794b58
+      uses: pulumi/actions@8582a9e8cc630786854029b4e09281acd6794b58 # v6.6.1
       with:
         command: ${{ inputs.command }}
         stack-name: organization/${{ inputs.projectName }}/${{ steps.configure.outputs.environment }}
