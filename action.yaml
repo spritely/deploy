@@ -25,10 +25,10 @@ inputs:
     required: false
     default: ""
   prodConfigJson:
-    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, configPassphrase, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
+    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
     required: true
   devConfigJson:
-    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, configPassphrase, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
+    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
     required: true
   prodKubeConfig:
     description: The kubeconfig file to use for the prod environment. devKubeConfig must also be set.
@@ -95,22 +95,21 @@ runs:
         echo bootstrapStackName: $bootstrapStackName
         echo bootstrapStackName=$bootstrapStackName >> $GITHUB_OUTPUT
 
+    # Write to file to avoid putting secrets in environment variables which can be exposed in logs (at least debug logs)
     - name: Prepare deployment config
-      shell: bash
-      run: |
-        mkdir -p ${{ github.workspace }}/config
-        cat > ${{ github.workspace }}/config/deployment.json << 'EOF'
-        ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
-        EOF
+      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
+      with:
+        path: ${{ github.workspace }}/config/deployment.json
+        contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
+        write-mode: overwrite
 
     - name: Prepare kubeconfig
       if: ${{ inputs.prodKubeConfig && inputs.devKubeConfig }}
-      shell: bash
-      run: |
-        mkdir -p ${{ github.workspace }}/config
-        cat > ${{ github.workspace }}/config/kubeConfig << 'EOF'
-        ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
-        EOF
+      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
+      with:
+        path: ${{ github.workspace }}/config/kubeConfig
+        contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
+        write-mode: overwrite
 
     - id: configure
       name: Read deployment settings
