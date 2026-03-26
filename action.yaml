@@ -96,7 +96,7 @@ runs:
         echo bootstrapStackName=$bootstrapStackName >> $GITHUB_OUTPUT
 
     - name: Prepare deployment config
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42
+      uses: DamianReeves/write-file-action@1d019960841941be46b139298996df6f139cc7a4
       with:
         path: ${{ github.workspace }}/config/deployment.json
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
@@ -104,7 +104,7 @@ runs:
 
     - name: Prepare kubeconfig
       if: ${{ inputs.prodKubeConfig && inputs.devKubeConfig }}
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42
+      uses: DamianReeves/write-file-action@1d019960841941be46b139298996df6f139cc7a4
       with:
         path: ${{ github.workspace }}/config/kubeConfig
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
