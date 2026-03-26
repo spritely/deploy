@@ -96,19 +96,21 @@ runs:
         echo bootstrapStackName=$bootstrapStackName >> $GITHUB_OUTPUT
 
     - name: Prepare deployment config
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
-      with:
-        path: ${{ github.workspace }}/config/deployment.json
-        contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
-        write-mode: overwrite
+      shell: bash
+      run: |
+        mkdir -p ${{ github.workspace }}/config
+        cat > ${{ github.workspace }}/config/deployment.json << 'EOF'
+        ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
+        EOF
 
     - name: Prepare kubeconfig
       if: ${{ inputs.prodKubeConfig && inputs.devKubeConfig }}
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
-      with:
-        path: ${{ github.workspace }}/config/kubeConfig
-        contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
-        write-mode: overwrite
+      shell: bash
+      run: |
+        mkdir -p ${{ github.workspace }}/config
+        cat > ${{ github.workspace }}/config/kubeConfig << 'EOF'
+        ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
+        EOF
 
     - id: configure
       name: Read deployment settings
