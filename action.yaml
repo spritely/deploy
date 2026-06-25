@@ -60,7 +60,7 @@ runs:
   steps:
     - id: version
       name: Get semantic version
-      uses: spritely/actions.semantic-version/get@1f2e124d7010c26bf864972f9efc2c222d524ccf # v0.8.21
+      uses: spritely/actions.semantic-version/get@c65ae3639da17cc9ecbb985627d3890c61dec3de # v0.8.22
       with:
         workingDirectory: ${{ inputs.workingDirectory }}
 
