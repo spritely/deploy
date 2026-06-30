@@ -228,13 +228,17 @@ runs:
 
         # Utility functions for creating json content
         add_value() {
+          local key="$1"
+          [[ "$key" != *:* ]] && key="$projectName:$key"
           local escaped_value=$(echo "$2" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "\"$projectName:$1\": { \"value\": \"$escaped_value\", \"secret\": false }"
+          echo "\"$key\": { \"value\": \"$escaped_value\", \"secret\": false }"
         }
 
         add_secret() {
+          local key="$1"
+          [[ "$key" != *:* ]] && key="$projectName:$key"
           local escaped_value=$(echo "$2" | sed ':a;N;$!ba;s/\n/\\n/g')
-          echo "\"$projectName:$1\": { \"value\": \"$escaped_value\", \"secret\": true }"
+          echo "\"$key\": { \"value\": \"$escaped_value\", \"secret\": true }"
         }
 
         # Collect json key/values in this array - values will be output of add_value or add_secret
