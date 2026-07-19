@@ -13,7 +13,7 @@ inputs:
     required: false
     default: .
   dynamicConfigValues:
-    description: "Map of config keys to special dynamic variable names (format: key=outputVariableName). The possible output variables include: version, bootstrapStackName, environment, cloudUrl, secretsProvider, configPassphrase, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret."
+    description: "Map of config keys to special dynamic variable names (format: key=outputVariableName). The possible output variables include: version, bootstrapStackName, environment, cloudUrl, secretsProvider, configPassphrase, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret."
     required: false
     default: ""
   configValues:
@@ -25,20 +25,15 @@ inputs:
     required: false
     default: ""
   prodConfigJson:
-    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
+    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
     required: true
   devConfigJson:
-    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, azureStorageAccount, azureStorageAccountKey, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
+    description: Deployment configuration in json format. It is formatted as a simple object with the following keys (set values appropriately) - cloudUrl, secretsProvider, azureSubscriptionId, azureTenantId, azureClientId, azureClientSecret.
     required: true
-  prodKubeConfig:
-    description: The kubeconfig file to use for the prod environment. devKubeConfig must also be set.
+  githubToken:
+    description: The GitHub token to use when pulling packages.
     required: false
-  devKubeConfig:
-    description: The kubeconfig file to use for the dev environment. prodKubeConfig must also be set.
-    required: false
-  nugetAuthToken:
-    description: The NuGet authentication token to use when pulling packages.
-    required: false
+    default: ${{ github.token }}
   branchEnvironmentMap:
     description: A map of branch names to environment names.
     required: false
@@ -101,14 +96,6 @@ runs:
       with:
         path: ${{ github.workspace }}/config/deployment.json
         contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodConfigJson || inputs.devConfigJson }}
-        write-mode: overwrite
-
-    - name: Prepare kubeconfig
-      if: ${{ inputs.prodKubeConfig && inputs.devKubeConfig }}
-      uses: DamianReeves/write-file-action@6929a9a6d1807689191dcc8bbe62b54d70a32b42 # v1.3
-      with:
-        path: ${{ github.workspace }}/config/kubeConfig
-        contents: ${{ steps.stack.outputs.bootstrapStackName == format('prod') && inputs.prodKubeConfig || inputs.devKubeConfig }}
         write-mode: overwrite
 
     - id: configure
@@ -198,12 +185,10 @@ runs:
         source ${{ github.workspace }}/config/deployment.env
 
         # Mask secrets
-        echo "::add-mask::$azureStorageAccountKey"
         echo "::add-mask::$azureClientSecret"
 
         echo cloudUrl: $cloudUrl
         echo secretsProvider: $secretsProvider
-        echo azureStorageAccount: $azureStorageAccount
         echo azureSubscriptionId: $azureSubscriptionId
         echo azureTenantId: $azureTenantId
         echo azureClientId: $azureClientId
@@ -211,12 +196,10 @@ runs:
         # Set output variables
         echo cloudUrl=$cloudUrl >> $GITHUB_OUTPUT
         echo secretsProvider=$secretsProvider >> $GITHUB_OUTPUT
-        echo azureStorageAccount=$azureStorageAccount >> $GITHUB_OUTPUT
         echo azureSubscriptionId=$azureSubscriptionId >> $GITHUB_OUTPUT
         echo azureTenantId=$azureTenantId >> $GITHUB_OUTPUT
         echo azureClientId=$azureClientId >> $GITHUB_OUTPUT
 
-        echo "azureStorageAccountKey=$azureStorageAccountKey" >> $GITHUB_OUTPUT
         echo "azureClientSecret=$azureClientSecret" >> $GITHUB_OUTPUT
 
         # Make some values from other steps available to this script
@@ -224,7 +207,7 @@ runs:
         bootstrapStackName=${{ steps.stack.outputs.bootstrapStackName }}
         projectName="${{ inputs.projectName }}"
 
-        secret_variables=("azureStorageAccountKey" "azureClientSecret" "gitSshPrivateKey" "gitHttpsAccessToken")
+        secret_variables=("azureClientSecret" "gitSshPrivateKey" "gitHttpsAccessToken")
 
         # Utility functions for creating json content
         add_value() {
@@ -359,8 +342,6 @@ runs:
         cloud-url: ${{ steps.configure.outputs.cloudUrl }}
         secrets-provider: ${{ steps.configure.outputs.secretsProvider }}
       env:
-        AZURE_STORAGE_ACCOUNT: ${{ steps.configure.outputs.azureStorageAccount }}
-        AZURE_STORAGE_KEY: ${{ steps.configure.outputs.azureStorageAccountKey }}
         ARM_SUBSCRIPTION_ID: ${{ steps.configure.outputs.azureSubscriptionId }}
         ARM_TENANT_ID: ${{ steps.configure.outputs.azureTenantId }}
         ARM_CLIENT_ID: ${{ steps.configure.outputs.azureClientId }}
@@ -368,5 +349,4 @@ runs:
         AZURE_TENANT_ID: ${{ steps.configure.outputs.azureTenantId }}
         AZURE_CLIENT_ID: ${{ steps.configure.outputs.azureClientId }}
         AZURE_CLIENT_SECRET: ${{ steps.configure.outputs.azureClientSecret }}
-        KUBECONFIG: ${{ github.workspace }}/config/kubeConfig
-        NUGET_TOKEN: ${{ inputs.nugetAuthToken }}
+        GITHUB_TOKEN: ${{ inputs.githubToken }}
