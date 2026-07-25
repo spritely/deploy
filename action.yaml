@@ -48,7 +48,7 @@ inputs:
     description: The version of pulumi to use.
     required: false
     # renovate: datasource=github-releases depName=pulumi/pulumi extractVersion=^v(?<version>.*)$
-    default: 3.251.0
+    default: 3.254.0
 
 runs:
   using: composite
